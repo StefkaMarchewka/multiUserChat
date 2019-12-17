@@ -34,6 +34,7 @@ public class ClientApp {
                 ioProvider.printResult(receivedMessage);
 
             } while (!userInput.equals("bye"));
+            System.out.println(client.getClientName() + "has disconnected");
 
 
         } catch (IOException ex) {
