@@ -14,32 +14,12 @@ public class ServerApp {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("New client connected");
 
-                InputStream inputStream = clientSocket.getInputStream();
-                OutputStream output = clientSocket.getOutputStream();
-                ObjectOutputStream serializedOut = new ObjectOutputStream(output);
-                ObjectInputStream serializedIn = new ObjectInputStream(inputStream);
+                new ServerThread(clientSocket).start();
 
-                PrintWriter writer = new PrintWriter(output, true);
-                String receivedText = "";
-
-                do {
-                    Message receivedMessage = (Message) serializedIn.readObject();
-                    receivedText = receivedMessage.getContent();
-
-                    //reset previously written object
-                    serializedOut.reset();
-                    serializedOut.writeObject(receivedMessage);
-                    writer.print(serializedOut);
-
-                } while (!receivedText.equals("bye"));
-
-                clientSocket.close();
             }
 
         } catch (IOException ex) {
             System.out.println("Server exception: " + ex.getMessage());
-            ex.printStackTrace();
-        } catch (ClassNotFoundException ex){
             ex.printStackTrace();
         }
     }
