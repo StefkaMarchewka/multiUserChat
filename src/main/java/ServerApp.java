@@ -1,7 +1,6 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class ServerApp {
     private final static int PORT  = 8080;
@@ -21,19 +20,11 @@ public class ServerApp {
                 ObjectInputStream serializedIn = new ObjectInputStream(inputStream);
 
                 PrintWriter writer = new PrintWriter(output, true);
-                Scanner scanner = new Scanner(System.in);
-
-                String receivedText = "xxx";
-                Message messageToSend;
+                String receivedText = "";
 
                 do {
-                    //read serialized obj from socket
                     Message receivedMessage = (Message) serializedIn.readObject();
                     receivedText = receivedMessage.getContent();
-                    //System.out.println(receivedMessage.getClientName()+ "> " + receivedMessage.getContent());
-
-                    //change user input to message obj, serialized and sending
-                    //messageToSend = new Message(scanner.nextLine());
 
                     //reset previously written object
                     serializedOut.reset();
@@ -44,7 +35,6 @@ public class ServerApp {
 
                 clientSocket.close();
             }
-
 
         } catch (IOException ex) {
             System.out.println("Server exception: " + ex.getMessage());
