@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.Optional;
 import java.util.UUID;
 
 public class ClientApp {
@@ -11,37 +12,73 @@ public class ClientApp {
         int portNumber = Integer.parseInt(args[1]);
         createUser();
 
-        try (Socket socket = new Socket("localhost", portNumber)) {
 
-            OutputStream output = socket.getOutputStream();
-            InputStream inputStream = socket.getInputStream();
-            PrintWriter writer = new PrintWriter(output, true);
+        try{
+            Socket socket = new Socket("localhost", portNumber);
+            Thread readMessage = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
 
-            String userInput;
-            ObjectOutputStream serializedOut = new ObjectOutputStream(output);
-            ObjectInputStream serializedIn = new ObjectInputStream(inputStream);
+                        InputStream inputStream = socket.getInputStream();
+                        ObjectInputStream serializedIn = new ObjectInputStream(inputStream);
 
-            do {
-                //get input from user
-                userInput = ioProvider.getUserInput();
-                Message messageToSend = new Message(userInput, client.getClientName(), client.getClientId());
+                        while (true) {
+                            try {
+                                Message receivedMessage;
+                                Object receivedObj;
 
-                serializedOut.reset();
-                serializedOut.writeObject(messageToSend);
-                writer.print(serializedOut);
+                                while ((receivedObj = serializedIn.readObject()) != null) {
+                                    receivedMessage = (Message) receivedObj;
+                                    ioProvider.printResult(receivedMessage);
+                                };
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
-                Message receivedMessage = (Message) serializedIn.readObject();
-                ioProvider.printResult(receivedMessage);
+                    } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-            } while (!userInput.equals("bye"));
+                }
+            });
+
+            Thread sendMessage = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        OutputStream outputStream = socket.getOutputStream();
+                        ObjectOutputStream serializedOut = new ObjectOutputStream(outputStream);
+
+                        String userInput = "";
+                        do {
+                            try {
+                                userInput = ioProvider.getUserInput();
+                                Message messageToSend = new Message(userInput, client.getClientName(), client.getClientId());
+
+                                serializedOut.reset();
+                                serializedOut.writeObject(messageToSend);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } while (!userInput.equals("bye"));
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            sendMessage.start();
+            readMessage.start();
 
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("I/O error: " + ex.getMessage());
-        } catch (ClassNotFoundException classEx){
-            System.out.println("class not found exception");
-            classEx.printStackTrace();
         }
     }
 

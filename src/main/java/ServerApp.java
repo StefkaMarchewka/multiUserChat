@@ -3,22 +3,31 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class ServerApp {
     private final static int PORT = 8080;
-    private static List<ClientHandler> clients = new ArrayList<>();
-    //try this solution https://www.geeksforgeeks.org/multi-threaded-chat-application-set-2/
+    static Vector<ClientHandler> clients = new Vector<>();
+    static Vector<Message> messages = new Vector<>();
 
     public static void main(String[] args) {
 
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+        try  {
             System.out.println("Server is waiting for client");
+            ServerSocket serverSocket = new ServerSocket(PORT);
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("New client connected");
-                new ServerThread(clientSocket).start();
+                InputStream inputStream = clientSocket.getInputStream();
+                OutputStream outputStream = clientSocket.getOutputStream();
 
+                ClientHandler client = new ClientHandler(clientSocket, inputStream, outputStream);
+                Thread thread = new Thread(client);
+                clients.add(client);
+                System.out.println("New client connected");
+                System.out.println("Number of clients " + clients.size());
+
+                thread.start();
 
             }
 
@@ -27,6 +36,7 @@ public class ServerApp {
             ex.printStackTrace();
 
         }
+        clients = new Vector<>();
 
     }
 }
