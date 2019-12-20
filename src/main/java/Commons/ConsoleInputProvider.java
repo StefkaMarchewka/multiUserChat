@@ -1,3 +1,5 @@
+package Commons;
+
 import java.util.Scanner;
 
 public class ConsoleInputProvider implements IOProvider {

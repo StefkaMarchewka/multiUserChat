@@ -1,3 +1,7 @@
+package Server;
+
+import Commons.Message;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -38,12 +42,9 @@ public class ClientHandler implements Runnable {
                 int lastMessage = ServerApp.messages.size()-1;
                 System.out.println("number of messages: " + lastMessage);
 
-                //try send message to each client in list
                 for (ClientHandler clientHandler: ServerApp.clients) {
                     clientHandler.serializedOut.writeObject(ServerApp.messages.get(lastMessage));
                     writer.print(clientHandler.serializedOut);
-                    //todo change print into println
-
                 }
 
             } while (!receivedText.equals("bye"));

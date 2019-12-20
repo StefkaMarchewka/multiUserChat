@@ -1,3 +1,5 @@
+package Client;
+
 public class Client {
     private static String clientName;
     private String clientId;
