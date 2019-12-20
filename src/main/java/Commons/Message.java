@@ -1,9 +1,16 @@
-public class Message {
+package Commons;
+
+import java.io.Serializable;
+
+public class Message implements Serializable {
     private String content;
-    private  long clientId;
+    private String clientId;
     private String clientName;
 
-    public Message(String content, String clientName, long clientId){
+    public Message(){
+    }
+
+    public Message(String content, String clientName, String clientId){
         this.content = content;
         this.clientName = clientName;
         this.clientId = clientId;
@@ -17,7 +24,7 @@ public class Message {
         return content;
     }
 
-    public long getClientId() {
+    public String getClientId() {
         return clientId;
     }
 }
