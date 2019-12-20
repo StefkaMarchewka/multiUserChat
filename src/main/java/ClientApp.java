@@ -12,14 +12,12 @@ public class ClientApp {
         int portNumber = Integer.parseInt(args[1]);
         createUser();
 
-
         try{
             Socket socket = new Socket("localhost", portNumber);
             Thread readMessage = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-
                         InputStream inputStream = socket.getInputStream();
                         ObjectInputStream serializedIn = new ObjectInputStream(inputStream);
 
