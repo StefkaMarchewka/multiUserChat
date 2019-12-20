@@ -5,14 +5,19 @@ import java.net.Socket;
 import java.util.UUID;
 
 import Commons.ConsoleInputProvider;
+import Commons.IOProvider;
 import Commons.Message;
 
 public class ClientApp {
-    private static Client client;
-    private static ConsoleInputProvider ioProvider = new ConsoleInputProvider();
+    private Client client;
+    private IOProvider ioProvider;
+
+    public ClientApp(IOProvider ioProvider){
+        this.ioProvider = ioProvider;
+    }
 
 
-    public static void main(String[] args) {
+    public void run(String[] args) {
         int portNumber = Integer.parseInt(args[1]);
         createUser();
 
@@ -85,7 +90,7 @@ public class ClientApp {
         }
     }
 
-    private static void createUser() {
+    private void createUser() {
         System.out.println("what's your name?");
         String clientName = ioProvider.getUserInput();
 

@@ -2,12 +2,19 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 
 public class ConfigResolver {
 
-    private static final String PATH = "/src/main/resources/config.json";
+    private static final String PATH = "config.json";
+
+    public ConfigResolver(){
+        System.out.println("config resolver created");
+
+    }
 
     public String getType(){
         JSONObject json = null;
@@ -21,8 +28,10 @@ public class ConfigResolver {
         return  (String) json.get("type");
     }
 
-    private static JSONObject getJsonObjectFromConfigFile() throws IOException, ParseException {
-        FileReader fileReader = new FileReader(PATH);
+    private JSONObject getJsonObjectFromConfigFile() throws IOException, ParseException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL resource = classLoader.getResource("config.json");
+        FileReader fileReader = new FileReader(new File(resource.getFile()));
         JSONParser jsonParser = new JSONParser();
 
         Object object = jsonParser.parse(fileReader);
