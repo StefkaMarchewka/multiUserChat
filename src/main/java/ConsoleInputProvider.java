@@ -11,6 +11,6 @@ public class ConsoleInputProvider implements IOProvider {
 
     @Override
     public void printResult(Message message){
-        System.out.print(message.getClientName() + "> " + message.getContent());
+        System.out.println(message.getClientName() + "> " + message.getContent());
     }
 }
