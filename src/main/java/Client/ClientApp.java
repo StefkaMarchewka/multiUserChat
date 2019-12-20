@@ -1,7 +1,11 @@
+package Client;
+
 import java.io.*;
 import java.net.Socket;
-import java.util.Optional;
 import java.util.UUID;
+
+import Commons.ConsoleInputProvider;
+import Commons.Message;
 
 public class ClientApp {
     private static Client client;
@@ -20,6 +24,7 @@ public class ClientApp {
                     try {
                         InputStream inputStream = socket.getInputStream();
                         ObjectInputStream serializedIn = new ObjectInputStream(inputStream);
+
 
                         while (true) {
                             try {
