@@ -5,8 +5,6 @@ import Commons.Message;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 public class ServerApp {
@@ -32,7 +30,6 @@ public class ServerApp {
                 System.out.println("Number of clients " + clients.size());
 
                 thread.start();
-
             }
 
         } catch (IOException ex) {
@@ -40,7 +37,5 @@ public class ServerApp {
             ex.printStackTrace();
 
         }
-        clients = new Vector<>();
-
     }
 }

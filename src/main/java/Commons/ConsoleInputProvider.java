@@ -12,7 +12,7 @@ public class ConsoleInputProvider implements IOProvider {
     }
 
     @Override
-    public void printResult(Message message){
+    public void printMessage(Message message){
         System.out.println(message.getClientName() + "> " + message.getContent());
     }
 }

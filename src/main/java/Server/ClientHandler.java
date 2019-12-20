@@ -35,7 +35,6 @@ public class ClientHandler implements Runnable {
                 Message receivedMessage = (Message) serializedIn.readObject();
                 receivedText = receivedMessage.getContent();
 
-                //reset previously written object
                 serializedOut.reset();
 
                 ServerApp.messages.add(receivedMessage);

@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.UUID;
 
-import Commons.ConsoleInputProvider;
 import Commons.IOProvider;
 import Commons.Message;
 
@@ -16,9 +15,8 @@ public class ClientApp {
         this.ioProvider = ioProvider;
     }
 
-
     public void run(String[] args) {
-        int portNumber = Integer.parseInt(args[1]);
+        int portNumber = Integer.parseInt(args[0]);
         createUser();
 
         try{
@@ -38,7 +36,7 @@ public class ClientApp {
 
                                 while ((receivedObj = serializedIn.readObject()) != null) {
                                     receivedMessage = (Message) receivedObj;
-                                    ioProvider.printResult(receivedMessage);
+                                    ioProvider.printMessage(receivedMessage);
                                 };
                             } catch (IOException e) {
                                 e.printStackTrace();
