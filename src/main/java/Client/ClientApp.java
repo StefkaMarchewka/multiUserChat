@@ -36,8 +36,6 @@ public class ClientApp {
                                 receivedMessage = (Message) receivedObj;
                                 ioProvider.printMessage(receivedMessage);
                             };
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }
