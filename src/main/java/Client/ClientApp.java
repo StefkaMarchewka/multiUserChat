@@ -24,26 +24,34 @@ public class ClientApp {
             Thread readMessage = new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    boolean isRunning = true;
+
                     try {
                         InputStream inputStream = socket.getInputStream();
                         ObjectInputStream serializedIn = new ObjectInputStream(inputStream);
 
-                        try {
-                            Message receivedMessage;
-                            Object receivedObj;
+                        while (isRunning) {
+                            try {
+                                Message receivedMessage;
+                                Object receivedObj;
 
-                            while ((receivedObj = serializedIn.readObject()) != null) {
-                                receivedMessage = (Message) receivedObj;
-                                ioProvider.printMessage(receivedMessage);
-                            };
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
+                                while ((receivedObj = serializedIn.readObject()) != null) {
+                                    receivedMessage = (Message) receivedObj;
+                                    ioProvider.printMessage(receivedMessage);
+                                };
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            if(Thread.interrupted()){
+                                isRunning = false;
+                            }
                         }
+                        socket.close();
 
                     } catch (IOException e) {
                     e.printStackTrace();
-                }
-
+                    }
+                    System.out.println("read message stopped");
                 }
             });
 
@@ -66,18 +74,19 @@ public class ClientApp {
                                 e.printStackTrace();
                             }
                         } while (!userInput.equals("bye"));
+                        readMessage.interrupt();
 
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    System.out.println("send message stopped");
                 }
             });
 
             sendMessage.start();
             readMessage.start();
 
-
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
             System.out.println("I/O error: " + ex.getMessage());
         }

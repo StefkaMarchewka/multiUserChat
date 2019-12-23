@@ -6,18 +6,17 @@ import java.io.*;
 import java.net.Socket;
 
 public class ClientHandler implements Runnable {
-    Socket socket;
+    Socket clientSocket;
     InputStream inputStream;
     OutputStream output;
     ObjectOutputStream serializedOut;
     ObjectInputStream serializedIn;
 
     public ClientHandler(Socket socket, InputStream inStream, OutputStream outStream){
-        this.socket = socket;
+        this.clientSocket = socket;
         this.output = outStream;
         this.inputStream = inStream;
         try {
-
             serializedOut = new ObjectOutputStream(output);
             serializedIn = new ObjectInputStream(inputStream);
         } catch (IOException e) {
@@ -36,10 +35,9 @@ public class ClientHandler implements Runnable {
                 receivedText = receivedMessage.getContent();
 
                 serializedOut.reset();
-
                 ServerApp.messages.add(receivedMessage);
                 int lastMessage = ServerApp.messages.size()-1;
-                System.out.println("number of messages: " + lastMessage);
+                System.out.println("number of messages: " + ServerApp.messages.size());
 
                 for (ClientHandler clientHandler: ServerApp.clients) {
                     clientHandler.serializedOut.writeObject(ServerApp.messages.get(lastMessage));
@@ -48,7 +46,8 @@ public class ClientHandler implements Runnable {
 
             } while (!receivedText.equals("bye"));
 
-             socket.close();
+             clientSocket.close();
+             ServerApp.clients.remove(this);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
