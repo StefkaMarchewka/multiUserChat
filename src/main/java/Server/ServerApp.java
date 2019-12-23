@@ -13,12 +13,13 @@ public class ServerApp {
     static Vector<Message> messages = new Vector<>();
 
     public static void main(String[] args) {
+        boolean isRunning = true;
 
         try  {
             System.out.println("Server is waiting for client");
             ServerSocket serverSocket = new ServerSocket(PORT);
 
-            while (true) {
+            while (isRunning) {
                 Socket clientSocket = serverSocket.accept();
                 InputStream inputStream = clientSocket.getInputStream();
                 OutputStream outputStream = clientSocket.getOutputStream();

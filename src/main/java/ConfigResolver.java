@@ -11,11 +11,6 @@ public class ConfigResolver {
 
     private static final String PATH = "config.json";
 
-    public ConfigResolver(){
-        System.out.println("config resolver created");
-
-    }
-
     public String getType(){
         JSONObject json = null;
         try{
