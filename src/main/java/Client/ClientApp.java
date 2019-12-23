@@ -28,21 +28,18 @@ public class ClientApp {
                         InputStream inputStream = socket.getInputStream();
                         ObjectInputStream serializedIn = new ObjectInputStream(inputStream);
 
+                        try {
+                            Message receivedMessage;
+                            Object receivedObj;
 
-                        while (true) {
-                            try {
-                                Message receivedMessage;
-                                Object receivedObj;
-
-                                while ((receivedObj = serializedIn.readObject()) != null) {
-                                    receivedMessage = (Message) receivedObj;
-                                    ioProvider.printMessage(receivedMessage);
-                                };
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            }
+                            while ((receivedObj = serializedIn.readObject()) != null) {
+                                receivedMessage = (Message) receivedObj;
+                                ioProvider.printMessage(receivedMessage);
+                            };
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
                         }
 
                     } catch (IOException e) {
